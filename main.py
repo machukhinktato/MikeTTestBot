@@ -2,12 +2,12 @@ import smtplib, ssl
 import requests
 import json
 from pprint import pprint
-from conf.data import *
+from misc.data import *
 
-
-token = telegram_token
-sender_email = email_name
-sender_email_psw = email_password
+TOKEN = telegram_token
+URL = 'https://api.telegram.org/bot' + TOKEN + '/'
+SENDER_EMAIL = email_name
+SENDER_EMAIL_PSW = email_password
 port = 587
 smtp_server = "smtp.gmail.com"
 receiver_email = "tarabrinmv@gmail.com"
@@ -32,13 +32,13 @@ def launch_server():
         server.quit()
 
 
-def tester():
-    url = 'https://api.telegram.org/bot1689484585:AAFu2z-9QnR7luTGBYHg3kY2ILbSquy4BOM/getupdates'
-    server_answer = requests.get(url)
-    pprint(server_answer.text)
+def get_updates():
+    server_answer = requests.get(URL + 'getupdates').json()
+    pprint(server_answer)
+    return server_answer
 
 
 if __name__ == '__main__':
-    tester()
+    get_updates()
 
 #thats all for today
