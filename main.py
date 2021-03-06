@@ -1,36 +1,6 @@
-import smtplib, ssl
 import requests
-import json
-from pprint import pprint
-from misc.data import *
-
-TOKEN = telegram_token
-URL = 'https://api.telegram.org/bot' + TOKEN + '/'
-SENDER_EMAIL = email_name
-SENDER_EMAIL_PSW = email_password
-port = 587
-smtp_server = "smtp.gmail.com"
-receiver_email = "tarabrinmv@gmail.com"
-message = """\
-Subject: Hi there
-
-This message is sent from Python."""
-
-
-def launch_server():
-    context = ssl.create_default_context()
-    try:
-        server = smtplib.SMTP(smtp_server, port)
-        server.ehlo()  # Can be omitted
-        server.starttls(context=context)  # Secure the connection
-        server.ehlo()  # Can be omitted
-        server.login(sender_email, sender_email_psw)
-        server.sendmail(sender_email, receiver_email, message)
-    except Exception as e:
-
-        print(e)
-    finally:
-        server.quit()
+from misc.variables import *
+from misc import smtp_server as smtp
 
 
 def get_updates():
@@ -40,24 +10,32 @@ def get_updates():
 
 def get_message():
     data = get_updates()
+    msg_upd_id = data['result'][-1]['update_id']
     chat_id = data['result'][-1]['message']['chat']['id']
     message_text = data['result'][-1]['message']['text']
     message = {
         'chat_id': chat_id,
         'text': message_text,
+        'last_upd_id': msg_upd_id,
     }
     return message
 
 
 def send_message(chat_id, text="Hello i'm Mike's bot!"):
-    link = f'sendmessage?chat_id={chat_id}&text={text}'
-    pprint(URL + link)
-    return None
+    requests.get(f"{URL}sendmessage?chat_id={chat_id}&text={text}")
+
 
 def main():
-    pass
+
+    while True:
+        data = get_message()
+        last_upd_id = data["last_upd_id"]
+        chat_id = data["chat_id"]
+        text = data["text"]
+        output_data = send_message(chat_id, 'what do you want?')
+        if 'eat' in text:
+            send_message(chat_id, 'which one?')
+
 
 if __name__ == '__main__':
-    pprint(send_message(13))
-
-# thats all for today
+    get_message()
