@@ -34,11 +34,22 @@ def launch_server():
 
 def get_updates():
     server_answer = requests.get(URL + 'getupdates').json()
-    pprint(server_answer)
     return server_answer
 
 
+def get_message():
+    data = get_updates()
+    chat_id = data['result'][-1]['message']['chat']['id']
+    message_text = data['result'][-1]['message']['text']
+    message = {
+        'chat_id': chat_id,
+        'text': message_text,
+    }
+    return message
+
+
+
 if __name__ == '__main__':
-    get_updates()
+    pprint(get_message())
 
 #thats all for today
