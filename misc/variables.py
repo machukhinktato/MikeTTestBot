@@ -6,6 +6,8 @@ SENDER_EMAIL = email_name
 SENDER_EMAIL_PSW = email_password
 PORT = 587
 SMTP_SERVER = "smtp.gmail.com"
+global MSG_UPD_ID
+MSG_UPD_ID = 0
 # RECEIVER_EMAIL = "tarabrinmv@gmail.com"
 # message = """\
 # Subject: Hi there

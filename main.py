@@ -13,12 +13,14 @@ def get_message():
     msg_upd_id = data['result'][-1]['update_id']
     chat_id = data['result'][-1]['message']['chat']['id']
     message_text = data['result'][-1]['message']['text']
-    message = {
-        'chat_id': chat_id,
-        'text': message_text,
-        'last_upd_id': msg_upd_id,
-    }
-    return message
+    global MSG_UPD_ID
+    if msg_upd_id != MSG_UPD_ID:
+        MSG_UPD_ID = msg_upd_id
+        message = {
+            'chat_id': chat_id,
+            'text': message_text,
+        }
+        return message
 
 
 def send_message(chat_id, text="Hello i'm Mike's bot!"):
@@ -26,16 +28,16 @@ def send_message(chat_id, text="Hello i'm Mike's bot!"):
 
 
 def main():
-
     while True:
         data = get_message()
-        last_upd_id = data["last_upd_id"]
-        chat_id = data["chat_id"]
-        text = data["text"]
-        output_data = send_message(chat_id, 'what do you want?')
-        if 'eat' in text:
-            send_message(chat_id, 'which one?')
+        if data != None:
+            chat_id = data["chat_id"]
+            text = data["text"]
+            if '/start' in text:
+                send_message(chat_id, 'hello, how can i help you?')
+        else:
+            continue
 
 
 if __name__ == '__main__':
-    get_message()
+    main()
