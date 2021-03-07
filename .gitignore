@@ -129,3 +129,4 @@ dmypy.json
 .pyre/
 misc/data.py
 .idea
+*.json
