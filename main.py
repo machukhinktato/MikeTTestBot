@@ -58,22 +58,34 @@ def index():
             'user_id': data["message"]["from"]["id"],
             'user_name': data["message"]["from"]["username"]
         }
-        write_json(data)
+        print(user_data)
+        # write_json(data)
         chat_id = data["message"]["chat"]["id"]
         message = data["message"]["text"]
         if '/start' in message:
             send_message(chat_id)
         if r'написать'.lower() in message:
             send_message(chat_id, 'введите почту куда отправить (пример: #to example@example.com)')
-
-        if r'#to' in message:
-            send_message(chat_id, 'good')
+            # user_data['subject'] = take_answer(chat_id)
+        if '#to' in message:
+            user_data['subject'] = message.split(' ')[1]
+            send_message(chat_id, 'введите название письма (пример: #title Привет)')
+        # print(user_data)
+        if '#title' in message:
+            # user_data['title'] = message
+            user_data['title'] = message.split(' ')[1]
+        if '#text' in message:
+            user_data['text'] = message.replace('#text', '')
+            # user_data[''] = message
         return jsonify(data)
     return '<h1>Hello im a bot</h1>'
 
 
-def Banana:
-    pass
+def take_answer(chat_id):
+    send_message(chat_id, 'good')
+    if request.method == 'POST':
+        data = request.get_json()
+        print(data)
 
 """
 def main():
