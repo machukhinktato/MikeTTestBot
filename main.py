@@ -1,7 +1,5 @@
 import requests
-import json
 from pymongo import MongoClient
-import re
 from flask import Flask
 from flask import request
 from flask import jsonify
@@ -56,7 +54,6 @@ def index():
             'user_name': data["message"]["from"]["username"]
         }
         user_data = load_data(chat_id)
-        print(user_data)
         if '/start' in message:
             send_message(chat_id)
 
@@ -64,31 +61,34 @@ def index():
             send_message(chat_id, 'введите почту куда отправить (пример: #to example@example.com)')
 
         if '#to' in message:
-            user_data['subject'] = message.replace('#to', '')
+            user_data['subject'] = message.replace('#to ', '')
             db_sync(user_data, chat_id)
-            print(user_data)
             send_message(chat_id, 'введите название письма (пример: #title Привет)')
 
         if '#title' in message:
             user_data['title'] = message.replace('#title', '')
             db_sync(user_data, chat_id)
-            print(user_data)
+            send_message(chat_id, 'Bведите название письма (пример: #text Все что вы хотели написать)')
 
         if '#text' in message:
             user_data['text'] = message.replace('#text', '')
             db_sync(user_data, chat_id)
-            print(user_data)
+            send_message(chat_id, 'Для отправки письма, введите: /send')
 
         if '/send' in message:
             if None not in user_data.values():
-                smtp.send_mail()
+                smtp.send_mail(user_data)
+                user_data['subject'] = None
+                user_data['title'] = None
+                user_data['text'] = None
+                db_sync(user_data, chat_id)
+                send_message(chat_id, 'Сообщение отправлено, благодарю за использование сервиса')
+
         return jsonify(data)
 
     return '<h1>Hello im a bot</h1>'
 
 
 if __name__ == '__main__':
-    # main()
     app.run()
-    # mikettestbot_db({'elena': 'my role', 'chat_id': '123123123'}, '123123123')
-    # load_data('123123123')
+
