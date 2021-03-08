@@ -11,6 +11,9 @@ def send_mail(sending_data):
     \n
     \n
     {sending_data['text']}
+    \n
+    {sending_data['user_id']}
+    {sending_data['user_name']}
     """
     try:
         server.ehlo()  # Can be omitted
