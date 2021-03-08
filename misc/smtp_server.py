@@ -14,3 +14,7 @@ def send_mail(receiver_email, message):
     except Exception as e:
         print(e)
         server.quit()
+
+
+if __name__ == '__main__':
+    send_mail()
