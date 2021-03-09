@@ -3,6 +3,10 @@ from .variables import *
 
 
 def send_mail(sending_data):
+    """
+    Функция отправляет письма
+    На вход принимает словарь
+    """
     context = ssl.create_default_context()
     server = smtplib.SMTP(SMTP_SERVER, PORT)
     message = f"""\
