@@ -16,9 +16,9 @@ def send_mail(sending_data):
     {sending_data['user_name']}
     """
     try:
-        server.ehlo()  # Can be omitted
-        server.starttls(context=context)  # Secure the connection
-        server.ehlo()  # Can be omitted
+        server.ehlo()
+        server.starttls(context=context)
+        server.ehlo()
         server.login(SENDER_EMAIL, SENDER_EMAIL_PSW)
         server.sendmail(SENDER_EMAIL, sending_data['subject'], message)
     except Exception as e:

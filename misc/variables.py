@@ -1,5 +1,6 @@
 from .data import *
 
+
 TOKEN = telegram_token
 URL = 'https://api.telegram.org/bot' + TOKEN + '/'
 SENDER_EMAIL = email_name
