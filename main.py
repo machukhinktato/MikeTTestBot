@@ -12,6 +12,10 @@ sslify = SSLify(app)
 
 
 def db_sync(data, chat_id):
+    """
+    Синхронизраует данные с БД, при отсутствии сохраняет, при наличии
+    обновляет, принимает данные в формате словаря и id чата
+    """
     db = MongoClient('localhost', 27017)
     db = db.telegram_bot
     collection = db[str(chat_id)]
@@ -29,6 +33,7 @@ def db_sync(data, chat_id):
 
 
 def load_data(chat_id):
+    """Загружает данные из БД, для работы принимает id чата"""
     db = MongoClient('localhost', 27017)
     table = db['telegram_bot']
     for elem in table[str(chat_id)].find({}):
@@ -36,11 +41,13 @@ def load_data(chat_id):
 
 
 def send_message(chat_id, text=WELCOME_MESSAGE):
+    """Функция отправляющая сообщение пользователю, принимает id чата и сообщение"""
     requests.post(f"{URL}sendmessage", {'chat_id': chat_id, 'text': text})
 
 
 @app.route('/', methods=['POST', 'GET'])
 def index():
+    """Основная функция, которая осуществляет маршрутизацию работы приложения"""
     if request.method == 'POST':
         data = request.get_json()
         chat_id = data["message"]["chat"]["id"]
@@ -83,6 +90,8 @@ def index():
                 user_data['text'] = None
                 db_sync(user_data, chat_id)
                 send_message(chat_id, 'Сообщение отправлено, благодарю за использование сервиса')
+            else:
+                send_message(chat_id, 'Для отправки сообещения, необходимо заполнить все поля')
 
         return jsonify(data)
 
